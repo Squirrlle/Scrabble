@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Tiles {
-    public ArrayList<Character> bag = new ArrayList<Character>(100);
-    public Random r = new Random();
+    private ArrayList<Character> bag = new ArrayList<Character>(100);
+    private Random r = new Random();
 
 
     Tiles(){
         newBag();
     }
 
-    public void newBag(){
+    private void newBag(){
         for(int i = 0; i < 9; i++)
             bag.add('a');
         for(int i = 0; i < 2; i++)
@@ -63,10 +63,9 @@ public class Tiles {
     }
 
     public ArrayList<Character> makePile(int n){
-        ArrayList<Character> pile = new ArrayList<Character>();
+        ArrayList<Character> pile = new ArrayList<>();
         int l = 100/n;
         for(int i = 0; i < l; i++){
-            int s = bag.size();
             int ran =  r.nextInt(bag.size());
             pile.add(bag.get(ran));
             bag.remove(ran);

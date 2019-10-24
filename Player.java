@@ -1,19 +1,15 @@
-import org.jetbrains.annotations.Contract;
-
 import java.util.ArrayList;
 
 public class Player {
 
-    public String name;
-    public String ip;
-    public int pts;
-    int pNum;
-    public ArrayList<Character> hand;
+    private String name;
+    private String ip;
+    private int pts;
+    private ArrayList<Character> hand;
 
     Player(String n, String i, int np){
         name = n;
         ip = i;
-        pNum = np;
         pts = 0;
     }
 

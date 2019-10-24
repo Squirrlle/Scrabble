@@ -1,7 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Board {
 
     public char[][] board;
@@ -12,7 +8,7 @@ public class Board {
         spaces = x * y;
     }
 
-    public char[][] mkBoard(int x, int y){
+    private char[][] mkBoard(int x, int y){
         spaces = x * y;
         board = new char[x][y];
         for(int i = 0; i < y; i++){
@@ -45,9 +41,9 @@ public class Board {
     }
 
     public boolean notFull(){
-        for (int i = 0; i < board.length; i++){
-            for (int x = 0; x < board[i].length; x++){
-                if(board[i][x] == '-')
+        for (char[] c : board) {
+            for (char aC : c) {
+                if (aC == '-')
                     return true;
             }
         }

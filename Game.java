@@ -29,25 +29,25 @@ public class Game {
 
         int turn = 0;
         while (turn < (h*w)){
-            for (int i = 0; i < plr.length; i++){
+            for (Player player : plr) {
                 turn++;
                 System.out.println("Turn " + turn);
                 System.out.println("Here is the board\n");
                 b.display();
                 s = new Scanner(System.in);
-                System.out.println(plr[i].getName() + "'s move");
+                System.out.println(player.getName() + "'s move");
                 System.out.println("Here is your hand\n");
-                System.out.println(plr[i].getHand().toString());
+                System.out.println(player.getHand().toString());
                 System.out.print("What is your move (row, column, letter)");
                 String mv = s.nextLine();
                 mv = mv.replaceAll(" ", "");
-                int x =  Character.getNumericValue(mv.charAt(0));
+                int x = Character.getNumericValue(mv.charAt(0));
                 int y = Character.getNumericValue(mv.charAt(mv.indexOf(',') + 1));
                 char c = mv.charAt(mv.lastIndexOf(',') + 1);
-                plr[i].pMove(b, c, x, y);
+                player.pMove(b, c, x, y);
                 b.display();
-                System.out.println(plr[i].getName() + " has " + plr[i].getPts() + " points\n\n");
-                if(turn >= (h*w))
+                System.out.println(player.getName() + " has " + player.getPts() + " points\n\n");
+                if (turn >= (h * w))
                     break;
             }
         }
