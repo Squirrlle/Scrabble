@@ -3,35 +3,41 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server {
 
-    private static ServerSocket server;
-    private static int port = 9876;
+    private static ServerSocket svr;
+    private int port;
+    private static final int DEFAULT_PORT = 7000;
+
+
+    public Server(int port) throws IllegalArgumentException {
+
+        if(port < 1024) {
+            throw new IllegalArgumentException("Port must be greater than or equal to 1024");
+        } else {
+            this.port = port;
+
+        }
+    }
+
+    public Server(){
+        this(DEFAULT_PORT);
+    }
+
+    public void start(){
+        svr = null;
+        try{
+            svr = new ServerSocket(port);
+        }
+        catch (IOException io){
+            System.err.println(io);
+        }
+    }
+
 
     public static void main(String args[]) throws IOException, ClassNotFoundException{
-        //create the socket server object
-        server = new ServerSocket(port);
-        //keep listens indefinitely until receives 'exit' call or program terminates
-        while(true){
-            System.out.println("Waiting for the client request");
-            Socket socket = server.accept();
-            ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
-            String message = (String) is.readObject();
-            System.out.println("Message Received: " + message);
-            ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
-            if(message.equalsIgnoreCase("exit"))
-                os.writeObject("GOODBYE");
-            else
-                os.writeObject("Hi Client");
-            is.close();
-            os.close();
-            socket.close();
-            if(message.equalsIgnoreCase("exit")) break;
-        }
-        System.out.println("Shutting down Socket server!!");
-        //close the ServerSocket object
-        server.close();
     }
 
 }
