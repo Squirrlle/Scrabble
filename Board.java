@@ -8,6 +8,10 @@ public class Board {
         spaces = x * y;
     }
 
+    Board(){
+        this(7, 7);
+    }
+
     private char[][] mkBoard(int x, int y){
         spaces = x * y;
         board = new char[x][y];

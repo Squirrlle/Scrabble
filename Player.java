@@ -3,19 +3,17 @@ import java.util.ArrayList;
 public class Player {
 
     private String name;
-    private String ip;
     private int pts;
     private ArrayList<Character> hand;
 
-    Player(String n, String i, int np){
+    Player(String n){
         name = n;
-        ip = i;
         pts = 0;
     }
 
 
-    Player(String n, int np){
-        this(n, "000.000.000", np);
+    Player(){
+        this("Player");
     }
 
     public void rename(String n){
@@ -82,9 +80,5 @@ public class Player {
 
     public int getPts() {
         return pts;
-    }
-
-    public String getIp() {
-        return ip;
     }
 }
