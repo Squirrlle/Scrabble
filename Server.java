@@ -23,9 +23,11 @@ public class Server {
             System.out.println("Server Started ....");
             while(true){
                 counter++;
-                Socket serverClient=server.accept();  //server accept the client connection request
+                //server accept the client connection request
+                Socket serverClient=server.accept();
                 System.out.println(" >> " + "Client No:" + counter + " started!");
-                ServerClientThread sct = new ServerClientThread(serverClient,counter, b, this, t); //send  the request to a separate thread
+                //send  the request to a separate thread
+                ServerClientThread sct = new ServerClientThread(serverClient,counter, b, this, t);
                 sct.start();
             }
         }catch(Exception e){
@@ -38,8 +40,12 @@ public class Server {
         ready++;
     }
 
-    public boolean stertGame(){
-        return ready == counter;
+    public boolean startGame(){
+        return ready == (counter - 1);
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
     public static void main(String[] args) {

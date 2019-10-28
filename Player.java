@@ -22,7 +22,7 @@ public class Player {
     }
 
     Player(){
-        this("defult", "000.000.000");
+        this("def", "000.000.000");
     }
 
     public void rename(String n){

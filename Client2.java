@@ -18,7 +18,7 @@ public class Client2{
                 System.out.print("Say Something :");
                 clientMessage = br.readLine();
                 if(clientMessage.equalsIgnoreCase("hello")){
-                    clientMessage = System.getProperty("os.name") + ", " + System.getProperty("os.name");
+                    clientMessage = System.getProperty("os.name") + ", " + System.getProperty("os.version");
                 }
                 outStream.writeUTF(clientMessage);
                 outStream.flush();

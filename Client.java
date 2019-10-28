@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class Client {
@@ -19,7 +18,7 @@ public class Client {
                 System.out.print("Say Something :");
                 clientMessage = br.readLine();
                 if(clientMessage.equalsIgnoreCase("hello")){
-                    clientMessage = System.getProperty("os.name") + ", " + System.getProperty("os.name");
+                    clientMessage = System.getProperty("os.name") + ", " + System.getProperty("os.version");
                 }
                 outStream.writeUTF(clientMessage);
                 outStream.flush();
