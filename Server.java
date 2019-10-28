@@ -4,6 +4,10 @@ import java.net.Socket;
 public class Server {
 
     int port;
+    int counter = 0;
+    int ready = 0;
+    Board b = new Board(15,15);
+    Tiles t = new Tiles();
 
     Server(int port){
         this.port = port;
@@ -16,13 +20,12 @@ public class Server {
     public void start(){
         try{
             ServerSocket server=new ServerSocket(port);
-            int counter = 0;
             System.out.println("Server Started ....");
             while(true){
                 counter++;
                 Socket serverClient=server.accept();  //server accept the client connection request
                 System.out.println(" >> " + "Client No:" + counter + " started!");
-                ServerClientThread sct = new ServerClientThread(serverClient,counter); //send  the request to a separate thread
+                ServerClientThread sct = new ServerClientThread(serverClient,counter, b, this, t); //send  the request to a separate thread
                 sct.start();
             }
         }catch(Exception e){
@@ -30,6 +33,14 @@ public class Server {
         }
     }
 
+
+    public void readyUp(){
+        ready++;
+    }
+
+    public boolean stertGame(){
+        return ready == counter;
+    }
 
     public static void main(String[] args) {
 

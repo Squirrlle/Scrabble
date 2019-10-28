@@ -4,11 +4,18 @@ import java.net.Socket;
 class ServerClientThread extends Thread {
     Socket serverClient;
     int clientNo;
-    int squre;
+    Board b;
+    Server s;
+    Tiles t;
+    Player p;
 
-    ServerClientThread(Socket inSocket,int counter){
+    ServerClientThread(Socket inSocket,int counter, Board b, Server s, Tiles t){
         serverClient = inSocket;
         clientNo=counter;
+        this.b = b;
+        this.s = s;
+        this.t = t;
+        Player p = new Player();
     }
     public void run(){
         try{
@@ -19,6 +26,9 @@ class ServerClientThread extends Thread {
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
                 clientMessage = inStream.readUTF();
+                if(clientMessage.equalsIgnoreCase("Ready")){
+                    s.readyUp();
+                }
                 System.out.println("From Client-" +clientNo+ ": "+clientMessage);
                 serverMessage="From Server to Client-" + clientNo + ": " + clientMessage;
                 outStream.writeUTF(serverMessage);

@@ -17,8 +17,12 @@ public class Player {
     }
 
 
-    Player(String n){
+    Player(String n) {
         this(n, "000.000.000");
+    }
+
+    Player(){
+        this("defult", "000.000.000");
     }
 
     public void rename(String n){
