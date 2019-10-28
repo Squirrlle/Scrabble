@@ -1,19 +1,24 @@
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 
 public class Player {
 
-    private String name;
-    private int pts;
-    private ArrayList<Character> hand;
+    public String name;
+    public String ip;
+    public int pts;
+    int pNum;
+    public ArrayList<Character> hand;
 
-    Player(String n){
+    Player(String n, String i){
         name = n;
+        ip = i;
         pts = 0;
     }
 
 
-    Player(){
-        this("Player");
+    Player(String n){
+        this(n, "000.000.000");
     }
 
     public void rename(String n){
@@ -80,5 +85,9 @@ public class Player {
 
     public int getPts() {
         return pts;
+    }
+
+    public String getIp() {
+        return ip;
     }
 }

@@ -1,56 +1,36 @@
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 class ServerClientThread extends Thread {
     Socket serverClient;
     int clientNo;
-    Board b;
-    Tiles t;
-    Player p;
+    int squre;
 
-    ServerClientThread(Socket inSocket, int counter, Tiles t) {
+    ServerClientThread(Socket inSocket,int counter){
         serverClient = inSocket;
-        clientNo = counter;
-        this.b = b;
-        this.t = t;
+        clientNo=counter;
     }
-
-    public void run() {
-        try {
-            ObjectInputStream inStream = new ObjectInputStream(serverClient.getInputStream());
-            ObjectOutputStream outStream = new ObjectOutputStream(serverClient.getOutputStream());
-            String clientMessage;
-            String serverMessage = "";
-            outStream.writeObject("");
-            boolean playing = true;
-
-            //HELLO implementation :tm:
-            outStream.writeObject("HELLO, " + System.getProperty("os.name") +"\nEnter your name: ");
+    public void run(){
+        try{
+            DataInputStream inStream = new DataInputStream(serverClient.getInputStream());
+            DataOutputStream outStream = new DataOutputStream(serverClient.getOutputStream());
+            String clientMessage="", serverMessage="";
+            outStream.writeUTF(System.getProperty("os.name") + ", " + System.getProperty("os.version"));
             outStream.flush();
-            clientMessage = inStream.readUTF();
-            Player p = new Player(clientMessage);
-            inStream.close();
-            outStream.close();
-
-            //Playing the game
-            while (playing) {
+            while(!clientMessage.equalsIgnoreCase("quit")){
                 clientMessage = inStream.readUTF();
-                if(clientMessage.equalsIgnoreCase("QUIT")){
-                    playing = false;
-                    serverMessage = "GOODBYE";
-                }
-                outStream.writeObject(serverMessage);
+                System.out.println("From Client-" +clientNo+ ": "+clientMessage);
+                serverMessage="From Server to Client-" + clientNo + ": " + clientMessage;
+                outStream.writeUTF(serverMessage);
                 outStream.flush();
             }
             inStream.close();
             outStream.close();
             serverClient.close();
-        } catch (Exception ex) {
+        }catch(Exception ex){
             System.out.println(ex);
-        } finally {
+        }finally{
             System.out.println("Client -" + clientNo + " exit!! ");
         }
     }
-
 }
