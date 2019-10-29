@@ -1,13 +1,19 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.net.Socket;
 
 class ServerClientThread extends Thread {
-    Socket serverClient;
-    int clientNo;
-    Board b;
-    Server s;
-    Tiles t;
-    boolean firstStart = true;
+    private Socket serverClient;
+    private int clientNo;
+    private Board b;
+    private Server s;
+    private Tiles t;
+    private Player p;
+    private boolean firstStart = true;
+    private boolean isMoving = false;
+    private DataInputStream inStream;
+    private DataOutputStream outStream;
 
     ServerClientThread(Socket inSocket, int counter, Board b, Server s, Tiles t){
         serverClient = inSocket;
@@ -16,26 +22,39 @@ class ServerClientThread extends Thread {
         this.s = s;
         this.t = t;
     }
+
     public void run(){
         try{
             String clientMessage="", serverMessage="";
-            DataInputStream inStream = new DataInputStream(serverClient.getInputStream());
-            DataOutputStream outStream = new DataOutputStream(serverClient.getOutputStream());
+            inStream = new DataInputStream(serverClient.getInputStream());
+            outStream = new DataOutputStream(serverClient.getOutputStream());
             outStream.writeUTF(System.getProperty("os.name") + ", " + System.getProperty("os.version"));
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
-                clientMessage = inStream.readUTF();
-                System.out.println("From Client-" +clientNo+ ": "+clientMessage);
+                clientMessage = recieveData();
                 if(clientMessage.equalsIgnoreCase("Ready") && !firstStart){
                     s.readyUp();
                     serverMessage = "From Server to Client-" + clientNo + ": " + "OK";
                 }
-                if(s.startGame()){
+                if (isMoving){
+                    moving(clientMessage);
+                }
+                else if(s.startGame()){
                     if(firstStart) {
                         serverMessage = "From Server to Client-" + clientNo + ": " + "Game Starting";
-                        Player p = new Player();
+                        p = new Player();
                         p.makeHand(s.getCounter(), t);
                         firstStart = false;
+                    }
+                    else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
+                        serverMessage = b.display();
+                    }
+                    else if(clientMessage.equalsIgnoreCase("TILES")){
+                        serverMessage = p.getHand();
+                    }
+                    else if(clientMessage.equalsIgnoreCase("PLACE")){
+                        serverMessage = "What is your move (row, column, letter): ";
+                        isMoving = true;
                     }
                     else {
                         serverMessage = "From Server to Client-" + clientNo + ": " + clientMessage;
@@ -44,17 +63,50 @@ class ServerClientThread extends Thread {
                 else {
                     serverMessage = "From Server to Client-" + clientNo + ": " + clientMessage;
                 }
-                outStream.writeUTF(serverMessage);
-                outStream.flush();
+                sendData(serverMessage);
             }
             System.out.println("Connection to server closed.");
             inStream.close();
             outStream.close();
             serverClient.close();
-        }catch(Exception ex){
-            System.out.println(ex);
-        }finally{
+        }
+        catch(Exception ex){
+            System.err.println(ex);
+        }
+        finally{
             System.out.println("Client -" + clientNo + " exit!! ");
         }
     }
+
+    public void moving(String s){
+        s.replaceAll(" ", "");
+        int x =  Character.getNumericValue(s.charAt(0));
+        int y = Character.getNumericValue(s.charAt(s.indexOf(',') + 1));
+        char c = s.charAt(s.lastIndexOf(',') + 1);
+        p.pMove(b, c, x, y);
+        isMoving = false;
+    }
+
+    public void sendData(String s){
+        try {
+            outStream.writeUTF(s);
+            outStream.flush();
+        }
+        catch (Exception ex){
+            System.err.println(ex);
+        }
+    }
+
+    public String recieveData(){
+        try {
+            String s = inStream.readUTF();
+            System.out.println("From Client-" +clientNo+ ": " + s);
+            return s;
+        }
+        catch(Exception ex){
+            System.err.println(ex);
+        }
+        return "NULL";
+    }
+
 }

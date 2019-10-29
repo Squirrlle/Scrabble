@@ -33,13 +33,13 @@ public class Player {
         hand = t.makePile(nPlayers);
     }
 
-    public ArrayList<Character> getHand() {
-        return hand;
+    public String getHand() {
+        return hand.toString();
     }
 
     public void pMove(Board b, char c, int x, int y){
         if(hand.contains(c)) {
-            if (b.addItem(c, x, y)) {
+            if (b.addItem("(" + c + ", 0)", x, y)) {
                 hand.remove(hand.indexOf(c));
                 switch (Character.toLowerCase(c)) {
                     case 'q':
@@ -91,7 +91,5 @@ public class Player {
         return pts;
     }
 
-    public String getIp() {
-        return ip;
-    }
+
 }
