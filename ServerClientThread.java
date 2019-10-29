@@ -31,40 +31,42 @@ class ServerClientThread extends Thread {
             outStream.writeUTF(System.getProperty("os.name") + ", " + System.getProperty("os.version"));
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
+                //Read Data
                 clientMessage = recieveData();
-                if(clientMessage.equalsIgnoreCase("Ready") && !firstStart){
+
+                //Calls Functions
+                if(clientMessage.equalsIgnoreCase("Ready") && firstStart){
                     s.readyUp();
                     serverMessage = "From Server to Client-" + clientNo + ": " + "OK";
                 }
-                if (isMoving){
+                else if (isMoving){
                     moving(clientMessage);
+                    isMoving = false;
                 }
-                else if(s.startGame()){
-                    if(firstStart) {
-                        serverMessage = "From Server to Client-" + clientNo + ": " + "Game Starting";
-                        p = new Player();
-                        p.makeHand(s.getCounter(), t);
-                        firstStart = false;
-                    }
-                    else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
-                        serverMessage = b.display();
-                    }
-                    else if(clientMessage.equalsIgnoreCase("TILES")){
-                        serverMessage = p.getHand();
-                    }
-                    else if(clientMessage.equalsIgnoreCase("PLACE")){
-                        serverMessage = "What is your move (row, column, letter): ";
-                        isMoving = true;
-                    }
-                    else {
-                        serverMessage = "From Server to Client-" + clientNo + ": " + clientMessage;
-                    }
+                else if(s.startGame() && firstStart){
+                    serverMessage = "From Server to Client-" + clientNo + ": " + "Game Starting";
+                    p = new Player();
+                    p.makeHand(s.getCounter(), t);
+                    firstStart = false;
+                }
+                else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
+                    serverMessage = b.display();
+                }
+                else if(clientMessage.equalsIgnoreCase("TILES")){
+                    serverMessage = p.getHand();
+                }
+                else if(clientMessage.equalsIgnoreCase("PLACE")){
+                    serverMessage = "What is your move (row, column, letter): ";
+                    isMoving = true;
                 }
                 else {
                     serverMessage = "From Server to Client-" + clientNo + ": " + clientMessage;
                 }
+
+                //Sends Data
                 sendData(serverMessage);
             }
+            //Shut Everything Down
             System.out.println("Connection to server closed.");
             inStream.close();
             outStream.close();
@@ -78,8 +80,8 @@ class ServerClientThread extends Thread {
         }
     }
 
-    public void moving(String s){
-        s.replaceAll(" ", "");
+    private void moving(String s){
+        s = s.replaceAll(" ", "");
         int x =  Character.getNumericValue(s.charAt(0));
         int y = Character.getNumericValue(s.charAt(s.indexOf(',') + 1));
         char c = s.charAt(s.lastIndexOf(',') + 1);
@@ -87,7 +89,7 @@ class ServerClientThread extends Thread {
         isMoving = false;
     }
 
-    public void sendData(String s){
+    private void sendData(String s){
         try {
             outStream.writeUTF(s);
             outStream.flush();
@@ -97,7 +99,7 @@ class ServerClientThread extends Thread {
         }
     }
 
-    public String recieveData(){
+    private String recieveData(){
         try {
             String s = inStream.readUTF();
             System.out.println("From Client-" +clientNo+ ": " + s);

@@ -1,13 +1,15 @@
+import javax.tools.ToolProvider;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
 
-    int port;
-    int counter = 0;
-    int ready = 0;
-    Board b = new Board(15,15);
-    Tiles t = new Tiles();
+    private int port;
+    private int counter = 0;
+    private int ready = 0;
+    private Board b = new Board();
+    private Tiles t = new Tiles();
+    private boolean isRunning = true;
 
     Server(int port){
         this.port = port;
@@ -21,7 +23,7 @@ public class Server {
         try{
             ServerSocket server=new ServerSocket(port);
             System.out.println("Server Started ....");
-            while(true){
+            while(isRunning){
                 counter++;
                 //server accept the client connection request
                 Socket serverClient=server.accept();
@@ -31,7 +33,7 @@ public class Server {
                 sct.start();
             }
         }catch(Exception e){
-            System.out.println(e);
+            System.err.println(e);
         }
     }
 

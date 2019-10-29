@@ -1,11 +1,7 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Board {
 
-    public String[][] board;
-    public int spaces;
+    private String[][] board;
+    private int spaces;
 
     Board(int x, int y){
         board = mkBoard(x, y);
@@ -16,7 +12,7 @@ public class Board {
         this(15,15);
     }
 
-    public String[][] mkBoard(int x, int y){
+    private String[][] mkBoard(int x, int y){
         spaces = x * y;
         board = new String[x][y];
         for(int i = 0; i < y; i++){
@@ -40,15 +36,15 @@ public class Board {
     }
 
     public String display(){
-        String table = "";
+        StringBuilder table = new StringBuilder();
         for(int i = 0; i < board.length; i++){
             for(int z = 0; z < board[i].length; z++){
-                table += board[z][i] + " ";
+                table.append(board[z][i]).append(" ");
             }
-            table += '\n';
+            table.append('\n');
         }
 
-        return display();
+        return table.toString();
     }
 
 }
