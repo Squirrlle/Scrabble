@@ -66,13 +66,13 @@ public class Server {
     }
 
     public String getWinner(){
-        Player pw = null;
-        int winner = 0;
+        String win = "";
+        int winner = Integer.MIN_VALUE;
         for(Player s : plr){
             if(s.getPts() >= winner)
-                pw = s;
+                win = s.getName();
         }
-        return pw.getName();
+        return win + " is the Winner";
     }
 
     public String getPoints(){

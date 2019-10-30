@@ -80,7 +80,7 @@ class ServerClientThread extends Thread {
                         serverMessage = s.getPoints();
                     }
                     else if(clientMessage.equalsIgnoreCase("WINNER")){
-                        serverMessage = "OK: " + s.getWinner() + " is the winner";
+                        serverMessage = "OK: " + s.getWinner();
                     }
                     else{
                         serverMessage = "From Server to Player-" + userName + ": NOK";
