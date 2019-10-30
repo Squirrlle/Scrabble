@@ -17,7 +17,7 @@ public class Server {
     }
 
     Server(){
-        this(42069);
+        this(7000);
     }
 
     public void start(){
@@ -75,7 +75,7 @@ public class Server {
 
     public static void main(String[] args) {
 
-        Server svr = new Server();
+        Server svr = new Server(42069);
         svr.start();
 
     }

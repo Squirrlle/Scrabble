@@ -95,12 +95,7 @@ class ServerClientThread extends Thread {
     private void moving(String st){
         st = st.replaceAll(" ", "");
         int x;
-        if(st.charAt(0) == '(') {
-            x = Character.getNumericValue(st.charAt(0));
-        }
-        else{
-            x = Character.getNumericValue(st.charAt(0));
-        }
+        x = Character.getNumericValue(st.charAt(st.indexOf(',') - 1));
         int y = Character.getNumericValue(st.charAt(st.indexOf(',') + 1));
         char c = st.charAt(st.lastIndexOf(',') + 1);
         p.pMove(s.getB(), c, x, y);
