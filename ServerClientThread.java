@@ -31,8 +31,8 @@ class ServerClientThread extends Thread {
             inStream = new DataInputStream(serverClient.getInputStream());
             outStream = new DataOutputStream(serverClient.getOutputStream());
             outStream.writeUTF("HELLO " + System.getProperty("os.name") + ", "
-                    + System.getProperty("os.version") + System.getProperty("java.runtime.version") +
-                    System.getProperty("os.name") + System.getProperty("name"));
+                    + System.getProperty("os.version") + ", " + System.getProperty("java.runtime.version") +
+                    ", " + System.getProperty("os.name"));
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
                 //Read Data
@@ -49,7 +49,15 @@ class ServerClientThread extends Thread {
 
                 else if (isMoving){
                     moving(clientMessage);
-                    isMoving = false;
+                    serverMessage = "OK";
+                }
+
+                else if(clientMessage.contains("HELLO")){
+                    serverMessage = "OK";
+                }
+
+                else if(clientMessage.equalsIgnoreCase("QUIT")){
+                    serverMessage = "OK: GOODBYE";
                 }
 
                 else if(s.startGame()){
@@ -68,19 +76,15 @@ class ServerClientThread extends Thread {
                         serverMessage = "OK: What is your move (row, column, letter): ";
                         isMoving = true;
                     }
-                    else if(clientMessage.equalsIgnoreCase("POINTS")){
-                        serverMessage = "Ok: You have " + p.getPts() + " points";
+                    else if(clientMessage.equalsIgnoreCase("SCORE")){
+                        serverMessage = s.getPoints();
                     }
                     else if(clientMessage.equalsIgnoreCase("WINNER")){
                         serverMessage = "OK: " + s.getWinner() + " is the winner";
                     }
                     else{
-                        serverMessage = "From Server to Player-" + userName + ": " + clientMessage;
+                        serverMessage = "From Server to Player-" + userName + ": NOK";
                     }
-                }
-
-                else if(clientMessage.equalsIgnoreCase("QUIT")){
-                    serverMessage = "OK: GOODBYE";
                 }
 
                 else {

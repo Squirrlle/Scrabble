@@ -9,8 +9,6 @@ public class Server {
     private int ready = 0;
     private Board b = new Board();
     private Tiles t = new Tiles();
-    private boolean isRunning = true;
-    private boolean going = false;
     private ArrayList<Player> plr = new ArrayList<>();
 
     Server(int port){
@@ -25,6 +23,7 @@ public class Server {
         try{
             ServerSocket server=new ServerSocket(port);
             System.out.println("Server Started ....");
+            boolean isRunning = true;
             while(isRunning){
                 counter++;
                 //server accept the client connection request
@@ -46,7 +45,7 @@ public class Server {
     }
 
     public boolean startGame(){
-        going = ready == (counter - 1);
+        boolean going = ready == (counter - 1);
         return going;
     }
 
@@ -76,10 +75,18 @@ public class Server {
         return pw.getName();
     }
 
+    public String getPoints(){
+        String points = "";
+        for(Player s : plr){
+            points += s.getName() + "Has " + s.getPts() + " Points";
+        }
+        return points;
+    }
+
 
     public static void main(String[] args) {
 
-        Server svr = new Server(4444);
+        Server svr = new Server();
         svr.start();
 
     }
