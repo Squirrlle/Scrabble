@@ -17,7 +17,7 @@ public class Board {
         board = new String[x][y];
         for(int i = 0; i < y; i++){
             for(int z = 0; z < x; z++){
-                board[z][i] = "(-, 0)";
+                board[z][i] = "(0, 0)";
             }
         }
         return board;
@@ -26,7 +26,7 @@ public class Board {
     public boolean addItem(String c, int x, int y){
         if(board[x][y].equals("(-, 0)")) {
             --spaces;
-            board[x][y] = "(" + c + ", 0)";
+            board[x][y] = c;
             return true;
         }
         else {

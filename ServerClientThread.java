@@ -6,21 +6,21 @@ import java.net.Socket;
 class ServerClientThread extends Thread {
     private Socket serverClient;
     private int clientNo;
-    private Board b;
     private Server s;
     private Tiles t;
     private Player p;
+    private String userName;
     private boolean firstStart = true;
     private boolean isMoving = false;
     private DataInputStream inStream;
     private DataOutputStream outStream;
 
-    ServerClientThread(Socket inSocket, int counter, Board b, Server s, Tiles t){
+    ServerClientThread(Socket inSocket, int counter, Server s, Tiles t){
         serverClient = inSocket;
-        clientNo=counter;
-        this.b = b;
+        clientNo = counter;
         this.s = s;
         this.t = t;
+        userName = Integer.toString(clientNo);
     }
 
     public void run(){
@@ -34,33 +34,45 @@ class ServerClientThread extends Thread {
                 //Read Data
                 clientMessage = recieveData();
 
-                //Calls Functions
                 if(clientMessage.equalsIgnoreCase("Ready") && firstStart){
                     s.readyUp();
-                    serverMessage = "From Server to Client-" + clientNo + ": " + "OK";
+                    serverMessage = "From Server to Player-" + userName + ": " + "OK";
                 }
+
+                else if(clientMessage.equalsIgnoreCase("USERSET")){
+                    serverMessage = userset();
+                }
+
                 else if (isMoving){
                     moving(clientMessage);
                     isMoving = false;
                 }
-                else if(s.startGame() && firstStart){
-                    serverMessage = "From Server to Client-" + clientNo + ": " + "Game Starting";
-                    p = new Player();
-                    p.makeHand(s.getCounter(), t);
-                    firstStart = false;
+
+                else if(s.startGame()){
+                    if(firstStart) {
+                        serverMessage = "From Server to Player-" + userName + ": " + "Game Starting";
+                        p = new Player(userName);
+                        p.makeHand(s.getCounter(), t);
+                        s.addPlayer(p);
+                        firstStart = false;
+                    }
+                    else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
+                        serverMessage = s.getBoardState();
+                    }
+                    else if(clientMessage.equalsIgnoreCase("TILES")){
+                        serverMessage = p.getHand();
+                    }
+                    else if(clientMessage.equalsIgnoreCase("PLACE")){
+                        serverMessage = "What is your move (row, column, letter): ";
+                        isMoving = true;
+                    }
+                    else{
+                        serverMessage = "From Server to Player-" + userName + ": " + clientMessage;
+                    }
                 }
-                else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
-                    serverMessage = b.display();
-                }
-                else if(clientMessage.equalsIgnoreCase("TILES")){
-                    serverMessage = p.getHand();
-                }
-                else if(clientMessage.equalsIgnoreCase("PLACE")){
-                    serverMessage = "What is your move (row, column, letter): ";
-                    isMoving = true;
-                }
+
                 else {
-                    serverMessage = "From Server to Client-" + clientNo + ": " + clientMessage;
+                    serverMessage = "From Server to Player-" + userName + ": " + clientMessage;
                 }
 
                 //Sends Data
@@ -76,16 +88,22 @@ class ServerClientThread extends Thread {
             System.err.println(ex);
         }
         finally{
-            System.out.println("Client -" + clientNo + " exit!! ");
+            System.out.println("Player -" + userName + " exit!! ");
         }
     }
 
-    private void moving(String s){
-        s = s.replaceAll(" ", "");
-        int x =  Character.getNumericValue(s.charAt(0));
-        int y = Character.getNumericValue(s.charAt(s.indexOf(',') + 1));
-        char c = s.charAt(s.lastIndexOf(',') + 1);
-        p.pMove(b, c, x, y);
+    private void moving(String st){
+        st = st.replaceAll(" ", "");
+        int x;
+        if(st.charAt(0) == '(') {
+            x = Character.getNumericValue(st.charAt(0));
+        }
+        else{
+            x = Character.getNumericValue(st.charAt(0));
+        }
+        int y = Character.getNumericValue(st.charAt(st.indexOf(',') + 1));
+        char c = st.charAt(st.lastIndexOf(',') + 1);
+        p.pMove(s.getB(), c, x, y);
         isMoving = false;
     }
 
@@ -101,14 +119,22 @@ class ServerClientThread extends Thread {
 
     private String recieveData(){
         try {
-            String s = inStream.readUTF();
-            System.out.println("From Client-" +clientNo+ ": " + s);
-            return s;
+            String out = inStream.readUTF();
+            System.out.println("From Player-" + userName + ": " + out);
+            return out;
         }
         catch(Exception ex){
             System.err.println(ex);
         }
         return "NULL";
+    }
+
+    private String userset(){
+        String sM = "Enter a New User Name: ";
+        sendData(sM);
+        userName = recieveData();
+        p.setName(userName);
+        return "Ok your name is now " + userName;
     }
 
 }
