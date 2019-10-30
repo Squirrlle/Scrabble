@@ -40,7 +40,7 @@ class ServerClientThread extends Thread {
                 }
 
                 else if(clientMessage.equalsIgnoreCase("USERSET")){
-                    serverMessage = userset();
+                    serverMessage = "OK: " + userset();
                 }
 
                 else if (isMoving){
@@ -60,11 +60,17 @@ class ServerClientThread extends Thread {
                         serverMessage = s.getBoardState();
                     }
                     else if(clientMessage.equalsIgnoreCase("TILES")){
-                        serverMessage = p.getHand();
+                        serverMessage = "OK: " + p.getHand();
                     }
                     else if(clientMessage.equalsIgnoreCase("PLACE")){
-                        serverMessage = "What is your move (row, column, letter): ";
+                        serverMessage = "OK: What is your move (row, column, letter): ";
                         isMoving = true;
+                    }
+                    else if(clientMessage.equalsIgnoreCase("POINTS")){
+                        serverMessage = "Ok: You have " + p.getPts() + " points";
+                    }
+                    else if(clientMessage.equalsIgnoreCase("WINNER")){
+                        serverMessage = "OK: " + s.getWinner() + " is the winner";
                     }
                     else{
                         serverMessage = "From Server to Player-" + userName + ": " + clientMessage;
@@ -94,6 +100,7 @@ class ServerClientThread extends Thread {
 
     private void moving(String st){
         st = st.replaceAll(" ", "");
+        st = st.replaceAll("\\(", "");
         int x;
         x = Character.getNumericValue(st.charAt(st.indexOf(',') - 1));
         int y = Character.getNumericValue(st.charAt(st.indexOf(',') + 1));

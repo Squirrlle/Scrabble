@@ -10,6 +10,7 @@ public class Server {
     private Board b = new Board();
     private Tiles t = new Tiles();
     private boolean isRunning = true;
+    private boolean going = false;
     private ArrayList<Player> plr = new ArrayList<>();
 
     Server(int port){
@@ -27,7 +28,7 @@ public class Server {
             while(isRunning){
                 counter++;
                 //server accept the client connection request
-                Socket serverClient=server.accept();
+                Socket serverClient = server.accept();
                 System.out.println(" >> " + "Client No:" + counter + " started!");
                 //send  the request to a separate thread
                 ServerClientThread sct = new ServerClientThread(serverClient,counter, this, t);
@@ -45,7 +46,8 @@ public class Server {
     }
 
     public boolean startGame(){
-        return ready == (counter - 1);
+        going = ready == (counter - 1);
+        return going;
     }
 
     public int getCounter() {
@@ -64,18 +66,20 @@ public class Server {
         plr.add(p);
     }
 
-    public void getWinner(){
-        Player pw;
+    public String getWinner(){
+        Player pw = null;
         int winner = 0;
         for(Player s : plr){
             if(s.getPts() >= winner)
                 pw = s;
         }
+        return pw.getName();
     }
+
 
     public static void main(String[] args) {
 
-        Server svr = new Server(42069);
+        Server svr = new Server(5555);
         svr.start();
 
     }

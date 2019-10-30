@@ -9,7 +9,7 @@ public class Board {
     }
 
     Board(){
-        this(15,15);
+        this(9,9);
     }
 
     private String[][] mkBoard(int x, int y){
@@ -17,14 +17,14 @@ public class Board {
         board = new String[x][y];
         for(int i = 0; i < y; i++){
             for(int z = 0; z < x; z++){
-                board[z][i] = "(0, 0)";
+                board[z][i] = "(0,0)";
             }
         }
         return board;
     }
 
     public boolean addItem(String c, int x, int y){
-        if(board[x][y].equals("(-, 0)")) {
+        if(board[x][y].equals("(0,0)")) {
             --spaces;
             board[x][y] = c;
             return true;
@@ -39,7 +39,7 @@ public class Board {
         StringBuilder table = new StringBuilder();
         for(int i = 0; i < board.length; i++){
             for(int z = 0; z < board[i].length; z++){
-                table.append(board[z][i]).append(" ");
+                table.append(board[z][i]);
             }
             table.append('\n');
         }

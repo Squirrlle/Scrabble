@@ -39,7 +39,7 @@ public class Player {
 
     public void pMove(Board b, char c, int x, int y){
         if(hand.contains(c)) {
-            if (b.addItem("(" + c + ", 0)", x, y)) {
+            if (b.addItem("(" + c + ",0)", x, y)) {
                 hand.remove(hand.indexOf(c));
                 switch (Character.toLowerCase(c)) {
                     case 'q':
