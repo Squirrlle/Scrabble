@@ -7,7 +7,7 @@ import java.net.Socket;
 public class Client {
     public static void main(String[] args){
         try{
-            Socket socket = new Socket("127.0.0.1",5555);
+            Socket socket = new Socket("127.0.0.1",4444);
             DataInputStream inStream = new DataInputStream(socket.getInputStream());
             DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +19,9 @@ public class Client {
                 System.out.print("Say Something :");
                 clientMessage = br.readLine();
                 if(clientMessage.equalsIgnoreCase("hello")){
-                    clientMessage = System.getProperty("os.name") + ", " + System.getProperty("os.version");
+                    clientMessage = "HELLO " + System.getProperty("os.name") + ", "
+                            + System.getProperty("os.version") + System.getProperty("java.runtime.version") +
+                            System.getProperty("os.name") + System.getProperty("name");
                 }
                 outStream.writeUTF(clientMessage);
                 outStream.flush();

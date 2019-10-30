@@ -25,10 +25,14 @@ class ServerClientThread extends Thread {
 
     public void run(){
         try{
+            p = new Player(userName);
+            s.addPlayer(p);
             String clientMessage="", serverMessage="";
             inStream = new DataInputStream(serverClient.getInputStream());
             outStream = new DataOutputStream(serverClient.getOutputStream());
-            outStream.writeUTF(System.getProperty("os.name") + ", " + System.getProperty("os.version"));
+            outStream.writeUTF("HELLO " + System.getProperty("os.name") + ", "
+                    + System.getProperty("os.version") + System.getProperty("java.runtime.version") +
+                    System.getProperty("os.name") + System.getProperty("name"));
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
                 //Read Data
@@ -51,9 +55,7 @@ class ServerClientThread extends Thread {
                 else if(s.startGame()){
                     if(firstStart) {
                         serverMessage = "From Server to Player-" + userName + ": " + "Game Starting";
-                        p = new Player(userName);
                         p.makeHand(s.getCounter(), t);
-                        s.addPlayer(p);
                         firstStart = false;
                     }
                     else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
@@ -77,8 +79,12 @@ class ServerClientThread extends Thread {
                     }
                 }
 
+                else if(clientMessage.equalsIgnoreCase("QUIT")){
+                    serverMessage = "OK: GOODBYE";
+                }
+
                 else {
-                    serverMessage = "From Server to Player-" + userName + ": " + clientMessage;
+                    serverMessage = "From Server to Player-" + userName + ": NOK";
                 }
 
                 //Sends Data

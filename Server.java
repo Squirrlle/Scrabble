@@ -79,7 +79,7 @@ public class Server {
 
     public static void main(String[] args) {
 
-        Server svr = new Server(5555);
+        Server svr = new Server(4444);
         svr.start();
 
     }
