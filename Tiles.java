@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tiles {
+class Tiles {
     private ArrayList<Character> bag = new ArrayList<>(100);
     private Random r = new Random();
 
@@ -62,7 +62,7 @@ public class Tiles {
         bag.add('e');
     }
 
-    public ArrayList<Character> makePile(int n){
+    ArrayList<Character> makePile(int n){
         ArrayList<Character> pile = new ArrayList<>();
         int l = 100/n;
         for(int i = 0; i < l; i++){

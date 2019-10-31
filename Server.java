@@ -11,15 +11,15 @@ public class Server {
     private Tiles t = new Tiles();
     private ArrayList<Player> plr = new ArrayList<>();
 
-    Server(int port){
+    private Server(int port){
         this.port = port;
     }
 
-    Server(){
+    private Server(){
         this(7000);
     }
 
-    public void start(){
+    private void start(){
         try{
             ServerSocket server=new ServerSocket(port);
             System.out.println("Server Started ....");
@@ -40,34 +40,33 @@ public class Server {
     }
 
 
-    public void readyUp(){
+    void readyUp(){
         ready++;
     }
 
-    public boolean startGame(){
-        boolean going = ready == (counter - 1);
-        return going;
+    boolean startGame(){
+        return ready == (counter - 1);
     }
 
-    public int getCounter() {
+    int getCounter() {
         return counter;
     }
 
-    public String getBoardState(){
+    String getBoardState(){
         return b.display();
     }
 
-    public Board getB() {
+    Board getB() {
         return b;
     }
 
-    public void addPlayer(Player p){
+    void addPlayer(Player p){
         plr.add(p);
     }
 
-    public String getWinner(){
+    String getWinner(){
         String win = "";
-        int winner = Integer.MIN_VALUE;
+        int winner = 0;
         for(Player s : plr){
             if(s.getPts() >= winner)
                 win = s.getName();
@@ -75,12 +74,12 @@ public class Server {
         return win + " is the Winner";
     }
 
-    public String getPoints(){
-        String points = "";
+    String getPoints(){
+        StringBuilder points = new StringBuilder();
         for(Player s : plr){
-            points += s.getName() + "Has " + s.getPts() + " Points";
+            points.append(s.getName()).append("Has ").append(s.getPts()).append(" Points");
         }
-        return points;
+        return points.toString();
     }
 
 

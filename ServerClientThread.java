@@ -1,11 +1,8 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.*;
 import java.net.Socket;
 
 class ServerClientThread extends Thread {
     private Socket serverClient;
-    private int clientNo;
     private Server s;
     private Tiles t;
     private Player p;
@@ -17,17 +14,17 @@ class ServerClientThread extends Thread {
 
     ServerClientThread(Socket inSocket, int counter, Server s, Tiles t){
         serverClient = inSocket;
-        clientNo = counter;
         this.s = s;
         this.t = t;
-        userName = Integer.toString(clientNo);
+        userName = Integer.toString(counter);
     }
 
     public void run(){
         try{
             p = new Player(userName);
             s.addPlayer(p);
-            String clientMessage="", serverMessage="";
+            String clientMessage = "";
+            String serverMessage;
             inStream = new DataInputStream(serverClient.getInputStream());
             outStream = new DataOutputStream(serverClient.getOutputStream());
             outStream.writeUTF("HELLO " + System.getProperty("os.name") + ", "
@@ -36,7 +33,7 @@ class ServerClientThread extends Thread {
             outStream.flush();
             while(!clientMessage.equalsIgnoreCase("quit")){
                 //Read Data
-                clientMessage = recieveData();
+                clientMessage = receiveData();
 
                 if(clientMessage.equalsIgnoreCase("Ready") && firstStart){
                     s.readyUp();
@@ -129,7 +126,7 @@ class ServerClientThread extends Thread {
         }
     }
 
-    private String recieveData(){
+    private String receiveData(){
         try {
             String out = inStream.readUTF();
             System.out.println("From Player-" + userName + ": " + out);
@@ -144,7 +141,7 @@ class ServerClientThread extends Thread {
     private String userset(){
         String sM = "Enter a New User Name: ";
         sendData(sM);
-        userName = recieveData();
+        userName = receiveData();
         p.setName(userName);
         return "Ok your name is now " + userName;
     }

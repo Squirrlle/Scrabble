@@ -4,43 +4,31 @@ import java.util.ArrayList;
 
 public class Player {
 
-    public String name;
-    public String ip;
-    public int pts;
-    int pNum;
-    public ArrayList<Character> hand;
+    private String name;
+    private int pts;
+    private ArrayList<Character> hand;
 
-    Player(String n, String i){
+    Player(String n) {
         name = n;
-        ip = i;
         pts = 0;
     }
 
-
-    Player(String n) {
-        this(n, "000.000.000");
-    }
-
     Player(){
-        this("def", "000.000.000");
+        this("PLAYER");
     }
 
-    public void rename(String n){
-        name = n;
-    }
-
-    public void makeHand(int nPlayers, Tiles t){
+    void makeHand(int nPlayers, Tiles t){
         hand = t.makePile(nPlayers);
     }
 
-    public String getHand() {
+    String getHand() {
         return hand.toString();
     }
 
-    public void pMove(Board b, char c, int x, int y){
+    void pMove(Board b, char c, int x, int y){
         if(hand.contains(c)) {
             if (b.addItem("(" + c + ",0)", x, y)) {
-                hand.remove(hand.indexOf(c));
+                hand.remove(c);
                 switch (Character.toLowerCase(c)) {
                     case 'q':
                     case 'z':
@@ -83,15 +71,15 @@ public class Player {
         }
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public int getPts() {
+    int getPts() {
         return pts;
     }
 
