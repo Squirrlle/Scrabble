@@ -6,6 +6,7 @@ public class Server {
 
     private int port;
     private int counter = 0;
+    private int turnNum = 1;
     private int ready = 0;
     private Board b = new Board();
     private Tiles t = new Tiles();
@@ -46,6 +47,14 @@ public class Server {
 
     boolean startGame(){
         return ready == (counter - 1);
+    }
+
+    boolean isTurn(int pNum){
+        return (pNum == turnNum) && startGame();
+    }
+
+    void nextTurn(){
+        turnNum++;
     }
 
     int getCounter() {

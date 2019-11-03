@@ -6,6 +6,7 @@ class ServerClientThread extends Thread {
     private Server s;
     private Tiles t;
     private Player p;
+    private int pNum;
     private String userName;
     private boolean firstStart = true;
     private boolean isMoving = false;
@@ -16,7 +17,8 @@ class ServerClientThread extends Thread {
         serverClient = inSocket;
         this.s = s;
         this.t = t;
-        userName = Integer.toString(counter);
+        pNum = counter;
+        userName = Integer.toString(pNum);
     }
 
     public void run(){
@@ -63,6 +65,10 @@ class ServerClientThread extends Thread {
                         p.makeHand(s.getCounter(), t);
                         firstStart = false;
                     }
+                    else if(clientMessage.equalsIgnoreCase("PASS") && s.isTurn(pNum)){
+                        serverMessage = "From Server to Player-" + userName + ": " + "Passing Turn";
+                        s.nextTurn();
+                    }
                     else if(clientMessage.equalsIgnoreCase("BOARDPUSH")){
                         serverMessage = s.getBoardState();
                     }
@@ -70,8 +76,13 @@ class ServerClientThread extends Thread {
                         serverMessage = "OK: " + p.getHand();
                     }
                     else if(clientMessage.equalsIgnoreCase("PLACE")){
-                        serverMessage = "OK: What is your move (row, column, letter): ";
-                        isMoving = true;
+                        if(s.isTurn(pNum)) {
+                            serverMessage = "OK: What is your move (row, column, letter): ";
+                            isMoving = true;
+                        }
+                        else{
+                            serverMessage = "NOK: It is not your turn";
+                        }
                     }
                     else if(clientMessage.equalsIgnoreCase("SCORE")){
                         serverMessage = s.getPoints();
@@ -82,6 +93,7 @@ class ServerClientThread extends Thread {
                     else{
                         serverMessage = "From Server to Player-" + userName + ": NOK";
                     }
+
                 }
 
                 else {
