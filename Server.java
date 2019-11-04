@@ -1,6 +1,7 @@
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server {
 
@@ -94,8 +95,17 @@ public class Server {
 
     public static void main(String[] args) {
 
-        Server svr = new Server();
-        svr.start();
+        Scanner s = new Scanner(System.in);
+        System.out.print("Enter a port number: ");
+        int pt = s.nextInt();
+        if(pt == 0) {
+            Server svr = new Server();
+            svr.start();
+        }
+        else{
+            Server svr = new Server(pt);
+            svr.start();
+        }
 
     }
 

@@ -3,11 +3,23 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client2{
     public static void main(String[] args){
+        Scanner s = new Scanner(System.in);
+        System.out.print("Enter an ip address: ");
+        String ip = s.nextLine();
+        if(ip.isEmpty() || ip.equalsIgnoreCase("localhost")){
+            ip = "127.0.0.1";
+        }
+        System.out.print("Enter a port number: ");
+        int port = s.nextInt();
+        if(port == 0){
+            port = 7000;
+        }
         try{
-            Socket socket = new Socket("127.0.0.1",7000);
+            Socket socket = new Socket(ip,port);
             DataInputStream inStream = new DataInputStream(socket.getInputStream());
             DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
